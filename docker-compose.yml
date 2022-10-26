@@ -4,9 +4,6 @@ services:
   api:
     container_name: api
     build: ./api
-    depends_on:
-    - postgres
-    - client
     ports:
       - "4000:4000"
     volumes:
