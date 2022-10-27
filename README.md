@@ -18,6 +18,7 @@ Todos los servidores pueden probarse a traves del enlace ```http://localhost:< p
 
 Puerto: ```3000```
 
+### Crear Venta:
 ```http://localhost:3000/registroVenta```\
 Query tipo ```POST```\
 Parametros:
