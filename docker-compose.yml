@@ -35,6 +35,19 @@ services:
       - "5000:5000" 
     volumes:
       - "./miembros/src:/app/src"
+  miembrosvip:
+    container_name: miembrosvip
+    build: ./miembrosvip
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
+      PORT: 6969
+      kafkaHost: kafka:9092
+    ports:
+      - "6969:6969" 
+    volumes:
+      - "./miembrosvip/src:/app/src"
 
   server-crud:
     container_name: server-crud
