@@ -62,47 +62,46 @@ const consume = async () =>{
       if( listaStock.some(item => item.nombre === data.nombre) ){
 
         console.log('- Ya Existe Vendedor ... Actualizando Stock -')
+        
 
         // let pos = listaStock.indexOf(data.nombre)
         // Stock position find
         for(var i = 0; i < listaStock.length ; i++){
           if( listaStock[i].nombre === data.nombre){
+              // Stock update
+              listaStock[i].stock = data.stock
             
-            // Stock update
-            listaStock[i].stock = data.stock
-          }
-          // ## Restock found
-          if (listaRestock.some(item => item.nombre != data.nombre) ){
+            // ## Restock found
+            if (listaRestock.some(item => item.nombre === data.nombre) ){
+              console.log('Restock Found')
+              // Restock position find
+              for(var j = 0; j < listaRestock.length ; j++){
+                if(listaRestock[j].nombre === data.nombre){
+                  // Restock Update
+                  listaRestock[j].stock = data.stock
 
-            // Restock position find
-            for(var j = 0; j < listaRestock.length ; j++){
-              if(listaRestock[j].nombre === data.nombre){
+                  // Vendedor tiene stock mayor a 20 ( No necesita Restock )
+                  if(parseInt(listaRestock[j].stock) >= 20){
+                    console.log('pos: ', j)
+                    listaRestock.splice(j,1)
+                    
+                  }
 
-                // Restock Update
-                listaRestock[j].stock = data.stock
-
-                // Vendedor tiene stock mayor a 20 ( No necesita Restock )
-                if(Integer.parseInt(listaRestock[j].stock) >= 20){
-                  
-                  listaRestock.splice(j,1)
-                  
                 }
+                
 
               }
+
+            // ## Restock Not Found
+            }else{
               
+              // Vendedor tiene un stock menor a 20 ( Necesita Restock )
+              if(parseInt(listaStock[i].stock) < 20){
+                listaRestock.push( listaStock[i] )
+              }
 
             }
-
-          // ## Restock Not Found
-          }else{
-            
-            // Vendedor tiene un stock menor a 20 ( Necesita Restock )
-            if(Integer.parseInt(listaStock[i].stock) < 20){
-              listaRestock.push( listaStock[i] )
-            }
-
           }
-
         }
         
 
@@ -114,6 +113,10 @@ const consume = async () =>{
           "nombre" : data.nombre,
           "stock": data.stock
         }
+
+      if(data.stock < 20){
+        listaRestock.push(vendedor)
+      }
 
         listaStock.push(vendedor)
       }
