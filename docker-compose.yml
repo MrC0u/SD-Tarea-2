@@ -2,7 +2,7 @@ version: '3.7'
 services:
 
   zookeeper:
-    image: 'bitnami/zookeeper:3.7.0'
+    image: 'bitnami/zookeeper:latest'
     restart: always
     environment:
       ALLOW_ANONYMOUS_LOGIN: "yes"
@@ -12,7 +12,7 @@ services:
       - 3888:3888
 
   kafka:
-    image: 'bitnami/kafka:2.8.1'
+    image: 'bitnami/kafka:latest'
     restart: always
     depends_on:
       - zookeeper
@@ -22,9 +22,9 @@ services:
     ports:
       - 9092:9092
 
-  api:
-    container_name: api
-    build: ./api
+  miembros:
+    container_name: miembros
+    build: ./miembros
     depends_on:
       - zookeeper
       - kafka
@@ -34,6 +34,6 @@ services:
     ports:
       - "3000:3000" 
     volumes:
-      - "./api/src:/app/src"
+      - "./miembros/src:/app/src"
 
       
