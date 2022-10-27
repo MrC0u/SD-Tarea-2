@@ -82,7 +82,7 @@ const consume = async () =>{
                 listaRestock[j].stock = data.stock
 
                 // Vendedor tiene stock mayor a 20 ( No necesita Restock )
-                if(listaRestock[j].stock >= 20){
+                if(Integer.parseInt(listaRestock[j].stock) >= 20){
                   
                   listaRestock.splice(j,1)
                   
@@ -97,7 +97,7 @@ const consume = async () =>{
           }else{
             
             // Vendedor tiene un stock menor a 20 ( Necesita Restock )
-            if(listaStock[i].stock < 20){
+            if(Integer.parseInt(listaStock[i].stock) < 20){
               listaRestock.push( listaStock[i] )
             }
 

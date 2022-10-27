@@ -34,29 +34,70 @@ app.get("/ventasDiarias",async (req, res) =>{
 
   while(vendedores.length > 0){
 
-    // ListaDiaria Found Nombre
+    // # ListaDiaria Found 'Nombre'
     if( listaDiaria.some(item => item.nombre === vendedores[0].nombre) ){
+      for(var i = 0; i < listaDiaria.length ; i++){
+        if( listaDiaria[i].nombre === vendedores[0].nombre){
+          
+          listaDiaria[i].ventas_totales += 1
 
-      for(var i = 0; i < listaRestock.length ; i++){
+          // ## Clientes found 'Nombre'
+          if( listaDiaria[i].clientes.some(item => item.nombre === vendedores[0].cliente) ){
+            for(var j = 0; j < listaDiaria[i].clientes.length ; j++){
+              if( listaDiaria[i].clientes[j].nombre === vendedores[0].cliente){
+
+                let cliente = listaDiaria[i].clientes[j]
+                
+                cliente.ventas_cliente += 1
+                cliente.cantidades.push( vendedores[0].cantidad )
+                let sum = cliente.cantidades.reduce((a,b) => parseInt(a)+parseInt(b))
+                cliente.promedio = (sum / parseInt(cliente.ventas_cliente) ).toFixed(1).toString()
+
+              }
+            }    
+          // ## Clientes NOT found 'Nombre'
+          }else{
+
+            let cliente = {
+              "nombre" : vendedores[0].cliente,
+              "ventas_cliente": 1,
+              "cantidades": [],
+              "promedio": vendedores[0].cantidad
+            }
+            
+            cliente.cantidades.push( vendedores[0].cantidad )
+            
+            listaDiaria[i].clientes.push( cliente )
+
+          }
+
+        }
 
       }
     
+    // # listaDiaria NOT Found 'Nombre'
     }else{
 
       let vendedor = {
-        "nombre" : data.nombre,
+        "nombre" : vendedores[0].nombre,
         "ventas_totales": 1,
-        "promedio_clientes": [],
+        "clientes": [],
         "clientes_totales": 1
       }
 
       let cliente = {
-        "nombre" : data.cliente,
-        "ventas_totales": 1,
-        "cantidad_venta": [],
+        "nombre" : vendedores[0].cliente,
+        "ventas_cliente": 1,
+        "cantidades": [],
+        "promedio": vendedores[0].cantidad
       }
 
-      vendedor.promedio_clientes.push()
+      cliente.cantidades.push( vendedores[0].cantidad )
+
+      vendedor.clientes.push( cliente )
+
+      listaDiaria.push( vendedor )
+
     }
 
     vendedores.shift()
