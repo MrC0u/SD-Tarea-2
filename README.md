@@ -10,7 +10,67 @@ En arquitectura Linux los containers son iniciados a traves del comando:
 docker-compose up --build --remove-orphans
 ```
 
-## Participantes
+# Request Servidores
+
+Todos los servidores pueden probarse a traves del enlace ```http://localhost:< port >/```, ejemplo: ```http://localhost:3000/```.
+
+## Cliente - Crud
+
+Puerto: ```3000```
+
+```http://localhost:3000/registroVenta```\
+Query tipo ```POST```\
+Parametros:
+```json
+"nombre": <String>,
+"cliente": <String>,
+"cantidad": <Integer>,
+"stock": <Integer>,
+"ubicacion": <Integer>,<Integer>
+```
+
+## Topic Ventas
+
+Puerto: ```4000```
+
+### Ventas Totales:
+```http://localhost:4000/ventas```\
+Query tipo ```GET```
+
+### Ventas Diarias:
+```http://localhost:4000/ventasDiarias```\
+Query tipo ```GET```
+
+
+## Topic Coordenadas
+
+Puerto: ```6000```
+
+### Ubicaciones Carritos:
+```http://localhost:6000/ubicaciones```\
+Query tipo ```GET```
+
+
+## Topic Stock
+
+Puerto: ```7000```
+
+### All Stock List:
+```http://localhost:7000/stockTotal```\
+Query tipo ```GET```
+
+### Restock Only List:
+```http://localhost:7000/restock```\
+Query tipo ```GET```
+
+
+# Video
+
+Video explicativo del funcionamiento:
+
+[![Video](https://img.youtube.com/)](https://www.youtube.com/)
+
+# Participantes
 
 Marcos Valderrama \
 Daniel Salas
