@@ -17,12 +17,58 @@ const kafka = new Kafka({
 
 let listaVentas = []
 
-app.get("/ventasDiarias",async (req, res) =>{
+// Responses
+
+app.get("/ventas",async (req, res) =>{
   
   console.log(listaVentas)
   res.send(listaVentas)  
 
 })
+
+app.get("/ventasDiarias",async (req, res) =>{
+  
+  let listaDiaria = []
+
+  let vendedores = [...listaVentas]
+
+  while(vendedores.length > 0){
+
+    // ListaDiaria Found Nombre
+    if( listaDiaria.some(item => item.nombre === vendedores[0].nombre) ){
+
+      for(var i = 0; i < listaRestock.length ; i++){
+
+      }
+    
+    }else{
+
+      let vendedor = {
+        "nombre" : data.nombre,
+        "ventas_totales": 1,
+        "promedio_clientes": [],
+        "clientes_totales": 1
+      }
+
+      let cliente = {
+        "nombre" : data.cliente,
+        "ventas_totales": 1,
+        "cantidad_venta": [],
+      }
+
+      vendedor.promedio_clientes.push()
+    }
+
+    vendedores.shift()
+  }
+
+ console.log(listaDiaria)
+ res.send(listaDiaria)    
+
+})
+
+
+//Consumer
 
 const consume = async () =>{
 
@@ -40,37 +86,27 @@ const consume = async () =>{
 
       console.log(" =~=~=~ o ~=~=~=")
       console.log(" Mensaje Recibido: ")
+
       let time = message.timestamp/1000;
+      console.log(time)
+
       const data = JSON.parse( message.value.toString() );
 
       console.log('Vendedor: ', data.nombre)
+      console.log('Cliente: ', data.cliente)
 
-      // Vendedor ya registrado
-      if( listaVentas.some(item => item.nombre === data.nombre) ){
+      // Ingreso de Venta
 
-        console.log('- Ya Existe Vendedor ... Actualizando -')
+      console.log('- Ingresando Venta... -')
 
-        for(var i = 0; i < listaVentas.length ; i++){
-          if( listaVentas[i].nombre === data.nombre){
-            listaVentas[i].ventas_totales+= 1
-          }
-        }
-        
-
-      // Vendedor no registrado
-      }else{
-        console.log('- No Existe Vendedor ... Ingresando -')
-
-        let vendedor = {
-          "nombre" : data.nombre,
-          "ventas_cliente": [],
-          "promedio_ventas_cliente" : [],
-          "clientes_totales": 0,
-          "ventas_totales": 1
-        }
-
-        listaVentas.push(vendedor)
+      let vendedor = {
+        "nombre" : data.nombre,
+        "cliente": data.cliente,
+        "cantidad" : data.cantidad,
       }
+
+      listaVentas.push(vendedor)
+
 
      //console.log(vendedor.nombre)
     

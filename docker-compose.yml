@@ -78,4 +78,18 @@ services:
     volumes:
       - "./server-ubicacion/src:/app/src"
 
+  server-stock:
+    container_name: server-stock
+    build: ./server-stock
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
+      PORT: 7000
+      kafkaHost: kafka:9092
+    ports:
+      - "7000:7000" 
+    volumes:
+      - "./server-stock/src:/app/src"
+
       

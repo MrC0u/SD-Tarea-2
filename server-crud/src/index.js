@@ -16,29 +16,46 @@ const kafka = new Kafka({
   brokers: ['kafka:9092'],
 })
 
+// Response Registro Venta
+
 app.post("/registroVenta",async (req, res) =>{
     const producer = kafka.producer({ createPartitioner: Partitioners.LegacyPartitioner })
     const admin = kafka.admin()
     await admin.connect()
     await producer.connect()
+
+
+    // Creacion Topicos
+
     await admin.createTopics({
         waitForLeaders: true,
         topics: [
           { topic: 'topic-ventas' },
         ],
     })
+
     await admin.createTopics({
       waitForLeaders: true,
       topics: [
         { topic: 'topic-coordenadas' },
       ],
   })
+
+  await admin.createTopics({
+    waitForLeaders: true,
+    topics: [
+      { topic: 'topic-stock' },
+    ],
+})
+
+  // Mensajes Productor
+
     console.log('Registro de Venta Recibido')
     console.log(req.query)
     
     let venta = {
         "nombre" : req.query.nombre,
-        "cliente": req.query.client,
+        "cliente": req.query.cliente,
         "cantidad": req.query.cantidad
       }
 
@@ -46,6 +63,11 @@ app.post("/registroVenta",async (req, res) =>{
         "nombre" : req.query.nombre,
         "ubicacion" : req.query.ubicacion,
     }
+
+    let stock = {
+      "nombre" : req.query.nombre,
+      "stock" : req.query.stock,
+  }
 
     await producer.send(
       {
@@ -61,6 +83,13 @@ app.post("/registroVenta",async (req, res) =>{
         },
       )
 
+    await producer.send(
+      {
+        topic: 'topic-stock',
+        messages: [{ value: JSON.stringify( stock ) }],
+      },
+    )
+
     
     await producer.disconnect()
     await admin.disconnect()
@@ -68,7 +97,7 @@ app.post("/registroVenta",async (req, res) =>{
     res.send("Venta enviada")
 })
 
-// Responses
+// Test Response
 
 app.get('/', (req, res) => {
     
