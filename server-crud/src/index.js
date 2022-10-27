@@ -26,13 +26,19 @@ app.post("/registroVenta",async (req, res) =>{
           { topic: 'topic-ventas' },
         ],
     })
+    console.log('Registro de Venta Recibido')
+    console.log(req.query)
     
-    console.log(req.body)
+    let venta = {
+        "nombre" : req.query.nombre,
+        "cliente": req.query.client,
+        "cantidad": req.query.cantidad
+      }
 
     await producer.send({
       topic: 'topic-ventas',
       messages: [
-        { value: JSON.stringify(req.query) },
+        { value: JSON.stringify( venta ) },
       ],
     })
     await producer.disconnect()
@@ -48,5 +54,6 @@ app.get('/', (req, res) => {
 
 });
 
-app.listen(3000)
-console.log('Crud Server open on port 3000')
+app.listen(3000, ()=>{
+    console.log('Crud Server open on port 3000')
+})

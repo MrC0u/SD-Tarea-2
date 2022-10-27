@@ -36,4 +36,18 @@ services:
     volumes:
       - "./server-crud/src:/app/src"
 
+  server-ventas:
+    container_name: server-ventas
+    build: ./server-ventas
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
+      PORT: 4000
+      kafkaHost: kafka:9092
+    ports:
+      - "4000:4000" 
+    volumes:
+      - "./server-ventas/src:/app/src"
+
       
