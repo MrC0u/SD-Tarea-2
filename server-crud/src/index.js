@@ -9,6 +9,7 @@ app.use(cors());
 // Kafka
 
 const { Kafka } = require('kafkajs')
+const { Partitioners } = require('kafkajs')
 
 const kafka = new Kafka({
   clientId: 'my-app',
@@ -16,7 +17,7 @@ const kafka = new Kafka({
 })
 
 app.post("/registroVenta",async (req, res) =>{
-    const producer = kafka.producer()
+    const producer = kafka.producer({ createPartitioner: Partitioners.LegacyPartitioner })
     const admin = kafka.admin()
     await admin.connect()
     await producer.connect()
@@ -26,6 +27,12 @@ app.post("/registroVenta",async (req, res) =>{
           { topic: 'topic-ventas' },
         ],
     })
+    await admin.createTopics({
+      waitForLeaders: true,
+      topics: [
+        { topic: 'topic-coordenadas' },
+      ],
+  })
     console.log('Registro de Venta Recibido')
     console.log(req.query)
     
@@ -35,14 +42,29 @@ app.post("/registroVenta",async (req, res) =>{
         "cantidad": req.query.cantidad
       }
 
-    await producer.send({
-      topic: 'topic-ventas',
-      messages: [
-        { value: JSON.stringify( venta ) },
-      ],
-    })
+    let ubicacion = {
+        "nombre" : req.query.nombre,
+        "ubicacion" : req.query.ubicacion,
+    }
+
+    await producer.send(
+      {
+        topic: 'topic-ventas',
+        messages: [{ value: JSON.stringify( venta ) }],
+      },
+    )
+
+    await producer.send(
+        {
+          topic: 'topic-coordenadas',
+          messages: [{ value: JSON.stringify( ubicacion ) }],
+        },
+      )
+
+    
     await producer.disconnect()
     await admin.disconnect()
+    console.log('Venta enviada')
     res.send("Venta enviada")
 })
 

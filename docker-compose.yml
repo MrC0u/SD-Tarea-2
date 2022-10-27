@@ -63,5 +63,19 @@ services:
       - "4000:4000" 
     volumes:
       - "./server-ventas/src:/app/src"
+  
+  server-ubicacion:
+    container_name: server-ubicacion
+    build: ./server-ubicacion
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
+      PORT: 6000
+      kafkaHost: kafka:9092
+    ports:
+      - "6000:6000" 
+    volumes:
+      - "./server-ubicacion/src:/app/src"
 
       
