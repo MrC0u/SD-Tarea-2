@@ -69,7 +69,7 @@ Query tipo ```GET```
 
 Video explicativo del funcionamiento:
 
-[![Video](https://img.youtube.com/)](https://www.youtube.com/)
+[![Video](https://img.youtube.com/)](https://www.youtube.com/watch?v=mCdA4bJAGGk/)
 
 # Participantes
 
