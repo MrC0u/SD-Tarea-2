@@ -9,12 +9,6 @@ router.get('/', (req, res) => {
 
 });
 
-router.get('/', (req, res) => {
-    
-    res.get('Test');
-
-});
-
 router.get('/test', test);
-
+//a
 module.exports = router;
