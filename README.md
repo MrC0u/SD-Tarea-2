@@ -12,5 +12,5 @@ docker-compose up --build --remove-orphans
 
 ## Participantes
 
-Marcos Valderrama
+Marcos Valderrama \
 Daniel Salas
