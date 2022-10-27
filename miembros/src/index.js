@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 app.use(cors())
 app.use(express.json());
-port= 3000
+port= 5000
 
 const { Kafka } = require('kafkajs')
 

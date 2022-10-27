@@ -29,12 +29,26 @@ services:
       - zookeeper
       - kafka
     environment:
+      PORT: 5000
+      kafkaHost: kafka:9092
+    ports:
+      - "5000:5000" 
+    volumes:
+      - "./miembros/src:/app/src"
+
+  server-crud:
+    container_name: server-crud
+    build: ./server-crud
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
       PORT: 3000
       kafkaHost: kafka:9092
     ports:
       - "3000:3000" 
     volumes:
-      - "./miembros/src:/app/src"
+      - "./server-crud/src:/app/src"
 
   server-ventas:
     container_name: server-ventas
