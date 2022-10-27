@@ -22,9 +22,9 @@ services:
     ports:
       - 9092:9092
 
-  api:
-    container_name: api
-    build: ./api
+  server-crud:
+    container_name: server-crud
+    build: ./server-crud
     depends_on:
       - zookeeper
       - kafka
@@ -34,6 +34,6 @@ services:
     ports:
       - "3000:3000" 
     volumes:
-      - "./api/src:/app/src"
+      - "./server-crud/src:/app/src"
 
       
