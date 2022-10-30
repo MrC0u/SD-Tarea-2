@@ -19,33 +19,37 @@ const kafka = new Kafka({
 // Response Registro Usuario
 
 app.post("/registroMaestro",async (req, res) =>{
-  const producer = kafka.producer()
+  const { Partitioners } = require('kafkajs')
+  const producer = kafka.producer({ createPartitioner: Partitioners.DefaultPartitioner })
   const admin = kafka.admin()
   await admin.connect()
   await producer.connect()
   await admin.createTopics({
       waitForLeaders: true,
       topics: [
-        { topic: 'nuevos-miembros' },
+        { topic: 'nuevos-miembros',
+          numPartitions: 2 },
       ],
   })
   
-  if(req.query.premium == 0){
-
-  await producer.send({
-    topic: 'nuevos-miembros',
-    messages: [
-      { value: JSON.stringify(req.query), partition:0 },
-    ],
-  })
-  }else{
+  if (req.query.premium == 1){
+    console.log('Se manda premium')
     await producer.send({
       topic: 'nuevos-miembros',
       messages: [
-        { value: JSON.stringify(req.query), partition:1 },
+        { value: JSON.stringify(req.query), partition: 1 },
       ],
     })
+  }else if(req.query.premium == 0){
+      console.log('Se manda NO premium')
+      await producer.send({
+        topic: 'nuevos-miembros',
+        messages: [
+          { value: JSON.stringify(req.query), partition: 0 },
+        ],
+      })
   }
+  
   await producer.disconnect()
   await admin.disconnect()
   res.send({ value: JSON.stringify(req.query) })

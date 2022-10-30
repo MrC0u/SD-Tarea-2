@@ -44,9 +44,10 @@ const consume = async () =>{
       })
 
     await consumer.connect()
-    await consumer.subscribe({ topic: 'nuevos-miembros', fromBeginning: true })
+    await consumer.subscribe({ topics: ['nuevos-miembros'], fromBeginning: true })
     variable = null
     await consumer.run({
+      partitionsConsumedConcurrently: 2,
       eachMessage: async ({ topic, partition, message }) => {
         console.log('Maestro Recibido')
 
@@ -61,8 +62,9 @@ const consume = async () =>{
           "correo": data.correo,
           "patente": data.patente
         }
-
+        console.log('partition: ' , partition)
         if(partition == 1){
+          console.log('es premium')
           if( ! listaVIP.some(item => item.rut === data.rut) ){
             listaVIP.push(User);
             console.log("Premiums: ",listaVIP)
@@ -70,7 +72,7 @@ const consume = async () =>{
             console.log('Maestro Ya existe')
           }
         }
-        else {
+        else if(partition == 0){
           if( ! listaUsuarios.some(item => item.rut === data.rut) ){
             listaUsuarios.push(User);
             console.log("No Premiums: ", listaUsuarios)
