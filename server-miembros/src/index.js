@@ -45,7 +45,6 @@ const consume = async () =>{
 
     await consumer.connect()
     await consumer.subscribe({ topics: ['nuevos-miembros'], fromBeginning: true })
-    variable = null
     await consumer.run({
       partitionsConsumedConcurrently: 2,
       eachMessage: async ({ topic, partition, message }) => {
@@ -79,8 +78,11 @@ const consume = async () =>{
           }else{
             console.log('Maestro Ya existe')
           }
+          
         }  
+
       },
+
     })
   }
 

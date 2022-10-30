@@ -17,10 +17,19 @@ const kafka = new Kafka({
 
 let listaUbicaciones = []
 
+let listaProfugos = []
+
 app.get("/ubicaciones",async (req, res) =>{
   
   console.log(listaUbicaciones)
   res.send(listaUbicaciones)  
+
+})
+
+app.get("/profugos",async (req, res) =>{
+  
+  console.log(listaProfugos)
+  res.send(listaProfugos)  
 
 })
 
@@ -36,26 +45,38 @@ const consume = async () =>{
   await consumer.subscribe({ topic: 'topic-coordenadas', fromBeginning: true })
 
   await consumer.run({
+    partitionsConsumedConcurrently: 2,
     eachMessage: async ({ topic, partition, message }) => {
 
       console.log(" =~=~=~ o ~=~=~=")
-      console.log(" Mensaje Recibido: ")
+      console.log(" Mensaje Recibido - particion: ", partition)
 
       const data = JSON.parse( message.value.toString() );
 
       let coords = data.ubicacion.split(',')
 
-      console.log('Vendedor: ', data.nombre, 'Coordenadas: ( ' , coords[0] , ' , ' , coords[1] , ' )')
+      let listaActualizar = []
+      let nombreLista = ''
+
+      if(partition == 0){
+        listaActualizar = listaUbicaciones
+        nombreLista = 'Coordenadas'
+      }else{
+        listaActualizar = listaProfugos
+        nombreLista = 'Profugos'
+      }
+
+      console.log('Lista ', nombreLista , ' - Vendedor: ', data.nombre, 'Coordenadas: ( ' , coords[0] , ' , ' , coords[1] , ' )')
 
       // Vendedor ya registrado
-      if( listaUbicaciones.some(item => item.nombre === data.nombre) ){
+      if( listaActualizar.some(item => item.nombre === data.nombre) ){
 
         console.log('- Ya Existe Vendedor ... Actualizando Coordenadas -')
 
         for(var i = 0; i < listaUbicaciones.length ; i++){
-          if( listaUbicaciones[i].nombre === data.nombre){
-            listaUbicaciones[i].coordenadas_x = coords[0]
-            listaUbicaciones[i].coordenadas_y = coords[1]
+          if( listaActualizar[i].nombre === data.nombre){
+            listaActualizar[i].coordenadas_x = coords[0]
+            listaActualizar[i].coordenadas_y = coords[1]
           }
         }
         
@@ -71,13 +92,15 @@ const consume = async () =>{
           "profugo" : false 
         }
 
-        listaUbicaciones.push(vendedor)
+        listaActualizar.push(vendedor)
       }
 
-     //console.log(vendedor.nombre)
+      //console.log(vendedor.nombre)
     
       console.log("Ubicacion Registrada")
       console.log('Cantidad lista: ', listaUbicaciones.length)
+
+      
 
     },
   })

@@ -19,8 +19,7 @@ const kafka = new Kafka({
 // Response Registro Usuario
 
 app.post("/registroMaestro",async (req, res) =>{
-  const { Partitioners } = require('kafkajs')
-  const producer = kafka.producer({ createPartitioner: Partitioners.DefaultPartitioner })
+  const producer = kafka.producer({ createPartitioner: Partitioners.DefaultPartitioner   })
   const admin = kafka.admin()
   await admin.connect()
   await producer.connect()
@@ -60,7 +59,7 @@ app.post("/registroMaestro",async (req, res) =>{
 // Response Registro Venta
 
 app.post("/registroVenta",async (req, res) =>{
-    const producer = kafka.producer({ createPartitioner: Partitioners.LegacyPartitioner })
+    const producer = kafka.producer({ createPartitioner: Partitioners.DefaultPartitioner  })
     const admin = kafka.admin()
     await admin.connect()
     await producer.connect()
@@ -78,14 +77,14 @@ app.post("/registroVenta",async (req, res) =>{
     await admin.createTopics({
       waitForLeaders: true,
       topics: [
-        { topic: 'topic-coordenadas' },
+        { topic: 'topic-coordenadas', numPartitions: 2 },
       ],
   })
 
   await admin.createTopics({
     waitForLeaders: true,
     topics: [
-      { topic: 'topic-stock' },
+      { topic: 'topic-stock', numPartitions: 2 },
     ],
 })
 
@@ -127,7 +126,7 @@ app.post("/registroVenta",async (req, res) =>{
     await producer.send(
       {
         topic: 'topic-stock',
-        messages: [{ value: JSON.stringify( stock ) }],
+        messages: [{ value: JSON.stringify( stock ), partition: 0 }],
       },
     )
 
@@ -136,6 +135,40 @@ app.post("/registroVenta",async (req, res) =>{
     await admin.disconnect()
     console.log('Venta enviada')
     res.send("Venta enviada")
+})
+
+// Response Profugo
+
+app.post("/carroProfugo",async (req, res) =>{
+  const { Partitioners } = require('kafkajs')
+  const producer = kafka.producer({ createPartitioner: Partitioners.DefaultPartitioner  })
+  const admin = kafka.admin()
+  await admin.connect()
+  await producer.connect()
+  await admin.createTopics({
+    waitForLeaders: true,
+    topics: [
+      { topic: 'topic-coordenadas', numPartitions: 2 },
+    ],
+})
+
+let ubicacion = {
+  "nombre" : req.query.nombre,
+  "ubicacion" : req.query.ubicacion,
+}
+  
+await producer.send(
+  {
+    topic: 'topic-stock',
+    messages: [{ value: JSON.stringify( ubicacion ), partition: 1 }],
+  },
+)
+  
+  await producer.disconnect()
+  await admin.disconnect()
+  res.send({ value: JSON.stringify('Ubicacion Enviada') })
+
+  
 })
 
 // Test Response
