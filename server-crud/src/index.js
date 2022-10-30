@@ -16,6 +16,31 @@ const kafka = new Kafka({
   brokers: ['kafka:9092'],
 })
 
+// Response Registro Usuario
+
+app.post("/registroMaestro",async (req, res) =>{
+  const producer = kafka.producer()
+  const admin = kafka.admin()
+  await admin.connect()
+  await producer.connect()
+  await admin.createTopics({
+      waitForLeaders: true,
+      topics: [
+        { topic: 'nuevos-miembros' },
+      ],
+  })
+  
+  await producer.send({
+    topic: 'nuevos-miembros',
+    messages: [
+      { value: JSON.stringify(req.query) },
+    ],
+  })
+  await producer.disconnect()
+  await admin.disconnect()
+  res.send({ value: JSON.stringify(req.query) })
+})
+
 // Response Registro Venta
 
 app.post("/registroVenta",async (req, res) =>{

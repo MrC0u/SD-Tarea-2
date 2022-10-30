@@ -22,20 +22,6 @@ services:
     ports:
       - 9092:9092
 
-  miembros:
-    container_name: miembros
-    build: ./miembros
-    depends_on:
-      - zookeeper
-      - kafka
-    environment:
-      PORT: 5000
-      kafkaHost: kafka:9092
-    ports:
-      - "5000:5000" 
-    volumes:
-      - "./miembros/src:/app/src"
-
   server-crud:
     container_name: server-crud
     build: ./server-crud
@@ -63,6 +49,20 @@ services:
       - "4000:4000" 
     volumes:
       - "./server-ventas/src:/app/src"
+
+  server-miembros:
+    container_name: server-miembros
+    build: ./server-miembros
+    depends_on:
+      - zookeeper
+      - kafka
+    environment:
+      PORT: 5000
+      kafkaHost: kafka:9092
+    ports:
+      - "5000:5000" 
+    volumes:
+      - "./server-miembros/src:/app/src"
   
   server-ubicacion:
     container_name: server-ubicacion
