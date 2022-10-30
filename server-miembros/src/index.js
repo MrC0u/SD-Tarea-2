@@ -62,7 +62,7 @@ const consume = async () =>{
           "patente": data.patente
         }
 
-        if(data.premium == 1){
+        if(partition == 0){
           if( ! listaVIP.some(item => item.rut === data.rut) ){
             listaVIP.push(User);
             console.log("Premiums: ",listaVIP)
