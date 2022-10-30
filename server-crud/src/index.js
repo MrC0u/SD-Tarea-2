@@ -30,15 +30,27 @@ app.post("/registroMaestro",async (req, res) =>{
       ],
   })
   
+  if(req.query.premium == 0){
+
   await producer.send({
     topic: 'nuevos-miembros',
     messages: [
-      { value: JSON.stringify(req.query) },
+      { value: JSON.stringify(req.query), partition:0 },
     ],
   })
+  }else{
+    await producer.send({
+      topic: 'nuevos-miembros',
+      messages: [
+        { value: JSON.stringify(req.query), partition:1 },
+      ],
+    })
+  }
   await producer.disconnect()
   await admin.disconnect()
   res.send({ value: JSON.stringify(req.query) })
+
+  
 })
 
 // Response Registro Venta
