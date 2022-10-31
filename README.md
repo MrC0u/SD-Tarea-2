@@ -51,6 +51,28 @@ Parametros:
 "ubicacion": <Integer>,<Integer>
 ```
 
+### Crear Maestro:
+```http://localhost:3000/registroMaestro```\
+Query tipo ```POST```\
+Parametros:
+```json
+"nombre": <String>,
+"apellido": <String>,
+"rut": <String>,
+"correo": <String>,
+"patente": <String>,
+"premium": <0 to False, 1 to True>
+```
+
+### Notificar Carro Profugo:
+```http://localhost:3000/carroProfugo```\
+Query tipo ```POST```\
+Parametros:
+```json
+"nombre": <String>,
+"ubicacion": <Integer>,<Integer>
+```
+
 ## Topic Ventas
 
 Puerto: ```4000```
