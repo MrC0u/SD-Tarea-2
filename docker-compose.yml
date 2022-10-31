@@ -17,10 +17,16 @@ services:
     depends_on:
       - zookeeper
     environment:
-      ALLOW_PLAINTEXT_LISTENER: "yes"
-      KAFKA_CFG_ZOOKEEPER_CONNECT: "zookeeper:2181"
+     - ALLOW_PLAINTEXT_LISTENER=yes
+     - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+     - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=false
     ports:
       - 9092:9092
+    # command: 
+    #   - /opt/bitnami/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 2 --config retention.ms=259200000 --topic nuevos-miembros
+    #   - /opt/bitnami/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 2 --config retention.ms=259200000 --topic topic-ventas
+    #   - /opt/bitnami/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 2 --config retention.ms=259200000 --topic topic-coordenadas
+    #   - /opt/bitnami/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 2 --config retention.ms=259200000 --topic topic-stock
 
   server-crud:
     container_name: server-crud

@@ -19,17 +19,17 @@ const kafka = new Kafka({
 // Response Registro Usuario
 
 app.post("/registroMaestro",async (req, res) =>{
-  const producer = kafka.producer({ createPartitioner: Partitioners.DefaultPartitioner   })
+  const producer = kafka.producer({  })
   const admin = kafka.admin()
   await admin.connect()
   await producer.connect()
-  await admin.createTopics({
-      waitForLeaders: true,
-      topics: [
-        { topic: 'nuevos-miembros',
-          numPartitions: 2 },
-      ],
-  })
+  // await admin.createTopics({
+  //     waitForLeaders: true,
+  //     topics: [
+  //       { topic: 'nuevos-miembros2',
+  //         numPartitions: 2 },
+  //     ],
+  // })
   
   if (req.query.premium == 1){
     console.log('Se manda premium')
@@ -59,7 +59,7 @@ app.post("/registroMaestro",async (req, res) =>{
 // Response Registro Venta
 
 app.post("/registroVenta",async (req, res) =>{
-    const producer = kafka.producer({ createPartitioner: Partitioners.DefaultPartitioner  })
+    const producer = kafka.producer({ })
     const admin = kafka.admin()
     await admin.connect()
     await producer.connect()
@@ -67,26 +67,26 @@ app.post("/registroVenta",async (req, res) =>{
 
     // Creacion Topicos
 
-    await admin.createTopics({
-        waitForLeaders: true,
-        topics: [
-          { topic: 'topic-ventas' },
-        ],
-    })
+//     await admin.createTopics({
+//         waitForLeaders: true,
+//         topics: [
+//           { topic: 'topic-ventas' },
+//         ],
+//     })
 
-    await admin.createTopics({
-      waitForLeaders: true,
-      topics: [
-        { topic: 'topic-coordenadas', numPartitions: 2 },
-      ],
-  })
+//     await admin.createTopics({
+//       waitForLeaders: true,
+//       topics: [
+//         { topic: 'topic-coordenadas', numPartitions: 2 },
+//       ],
+//   })
 
-  await admin.createTopics({
-    waitForLeaders: true,
-    topics: [
-      { topic: 'topic-stock', numPartitions: 2 },
-    ],
-})
+//   await admin.createTopics({
+//     waitForLeaders: true,
+//     topics: [
+//       { topic: 'topic-stock', numPartitions: 2 },
+//     ],
+// })
 
   // Mensajes Productor
 
@@ -141,16 +141,16 @@ app.post("/registroVenta",async (req, res) =>{
 
 app.post("/carroProfugo",async (req, res) =>{
   const { Partitioners } = require('kafkajs')
-  const producer = kafka.producer({ createPartitioner: Partitioners.DefaultPartitioner  })
+  const producer = kafka.producer({  })
   const admin = kafka.admin()
   await admin.connect()
   await producer.connect()
-  await admin.createTopics({
-    waitForLeaders: true,
-    topics: [
-      { topic: 'topic-coordenadas', numPartitions: 2 },
-    ],
-})
+//   await admin.createTopics({
+//     waitForLeaders: true,
+//     topics: [
+//       { topic: 'topic-coordenadas', numPartitions: 2 },
+//     ],
+// })
 
 let ubicacion = {
   "nombre" : req.query.nombre,
@@ -159,7 +159,7 @@ let ubicacion = {
   
 await producer.send(
   {
-    topic: 'topic-stock',
+    topic: 'topic-coordenadas',
     messages: [{ value: JSON.stringify( ubicacion ), partition: 1 }],
   },
 )
@@ -167,6 +167,7 @@ await producer.send(
   await producer.disconnect()
   await admin.disconnect()
   res.send({ value: JSON.stringify('Ubicacion Enviada') })
+  console.log('Carro Profugo Enviado')
 
   
 })

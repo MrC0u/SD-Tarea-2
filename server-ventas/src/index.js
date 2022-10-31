@@ -69,6 +69,8 @@ app.get("/ventasDiarias",async (req, res) =>{
             
             listaDiaria[i].clientes.push( cliente )
 
+            listaDiaria[i].clientes_totales += 1
+
           }
 
         }
@@ -117,7 +119,7 @@ const consume = async () =>{
 
   const consumer = kafka.consumer({
      groupId: 'group-ventas',
-     heartbeatInterval: 5000
+     heartbeatInterval: 10000
     })
   await consumer.connect()
   await consumer.subscribe({ topic: 'topic-ventas', fromBeginning: true })

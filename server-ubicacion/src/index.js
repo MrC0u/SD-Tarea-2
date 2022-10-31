@@ -39,7 +39,7 @@ const consume = async () =>{
 
   const consumer = kafka.consumer({
      groupId: 'group-ubicaciones',
-     heartbeatInterval: 5000
+     heartbeatInterval: 10000
     })
   await consumer.connect()
   await consumer.subscribe({ topic: 'topic-coordenadas', fromBeginning: true })
@@ -57,6 +57,7 @@ const consume = async () =>{
 
       let listaActualizar = []
       let nombreLista = ''
+      let profugo = false
 
       if(partition == 0){
         listaActualizar = listaUbicaciones
@@ -64,6 +65,7 @@ const consume = async () =>{
       }else{
         listaActualizar = listaProfugos
         nombreLista = 'Profugos'
+        profugo = true
       }
 
       console.log('Lista ', nombreLista , ' - Vendedor: ', data.nombre, 'Coordenadas: ( ' , coords[0] , ' , ' , coords[1] , ' )')
@@ -89,7 +91,7 @@ const consume = async () =>{
           "nombre" : data.nombre,
           "coordenadas_x": coords[0],
           "coordenadas_y": coords[1],
-          "profugo" : false 
+          "profugo" : profugo 
         }
 
         listaActualizar.push(vendedor)
@@ -98,7 +100,6 @@ const consume = async () =>{
       //console.log(vendedor.nombre)
     
       console.log("Ubicacion Registrada")
-      console.log('Cantidad lista: ', listaUbicaciones.length)
 
       
 

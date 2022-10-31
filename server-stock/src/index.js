@@ -43,7 +43,7 @@ const consume = async () =>{
 
   const consumer = kafka.consumer({
      groupId: 'group-stock',
-     heartbeatInterval: 5000
+     heartbeatInterval: 10000
     })
   await consumer.connect()
   await consumer.subscribe({ topic: 'topic-stock', fromBeginning: true })
@@ -124,7 +124,6 @@ const consume = async () =>{
      //console.log(vendedor.nombre)
     
       console.log("Stock Registrado")
-      console.log('Cantidad lista: ', listaStock.length)
 
       // Caso de Restock
 

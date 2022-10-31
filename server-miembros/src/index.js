@@ -40,13 +40,12 @@ const consume = async () =>{
 
     const consumer = kafka.consumer({
        groupId: 'group-miembros',
-       heartbeatInterval: 5000
+       heartbeatInterval: 10000
       })
 
     await consumer.connect()
     await consumer.subscribe({ topics: ['nuevos-miembros'], fromBeginning: true })
     await consumer.run({
-      partitionsConsumedConcurrently: 2,
       eachMessage: async ({ topic, partition, message }) => {
         console.log('Maestro Recibido')
 
@@ -66,7 +65,6 @@ const consume = async () =>{
           console.log('es premium')
           if( ! listaVIP.some(item => item.rut === data.rut) ){
             listaVIP.push(User);
-            console.log("Premiums: ",listaVIP)
           }else{
             console.log('Maestro Ya existe')
           }
@@ -74,11 +72,10 @@ const consume = async () =>{
         else if(partition == 0){
           if( ! listaUsuarios.some(item => item.rut === data.rut) ){
             listaUsuarios.push(User);
-            console.log("No Premiums: ", listaUsuarios)
           }else{
             console.log('Maestro Ya existe')
           }
-          
+
         }  
 
       },
