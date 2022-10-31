@@ -18,6 +18,12 @@ Dentro de la carpeta del docker compose ejecutamos el siguiente comando para la 
 docker-compose exec kafka /opt/bitnami/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions <NUMERO-PARTICIONES> --config retention.ms=259200000 --topic <NOMBRE-TOPIC>
 ```
 
+Los topics que se deben crear para el funcionamiento de los servidores de procesamiento son:\
+```nuevos-miembros```\
+```topic-stock```\
+```topic-coordenadas```\
+```topic-ventas```
+
 Si queremos ver la lista de Topics junto con sus particiones ejecutamos el siguiente comando en la misma ruta:
 
 ```bash
