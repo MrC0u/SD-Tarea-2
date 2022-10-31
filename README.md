@@ -42,6 +42,17 @@ Query tipo ```GET```
 ```http://localhost:4000/ventasDiarias```\
 Query tipo ```GET```
 
+## Topic Maestros Nuevos
+
+Puerto: ```5000```
+
+### Maestros No Premium:
+```http://localhost:4000/users```\
+Query tipo ```GET```
+
+### Maestros Premium:
+```http://localhost:4000/usersPremium```\
+Query tipo ```GET```
 
 ## Topic Coordenadas
 
@@ -49,6 +60,10 @@ Puerto: ```6000```
 
 ### Ubicaciones Carritos:
 ```http://localhost:6000/ubicaciones```\
+Query tipo ```GET```
+
+### Carritos Profugos:
+```http://localhost:6000/profugos```\
 Query tipo ```GET```
 
 
