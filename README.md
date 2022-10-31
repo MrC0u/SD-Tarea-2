@@ -10,6 +10,21 @@ En arquitectura Linux los containers son iniciados a traves del comando:
 docker-compose up --build --remove-orphans
 ```
 
+# Creacion Topics
+
+Dentro de la carpeta del docker compose ejecutamos el siguiente comando para la creacion de topics:
+
+```bash
+docker-compose exec kafka /opt/bitnami/kafka/bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions <NUMERO-PARTICIONES> --config retention.ms=259200000 --topic <NOMBRE-TOPIC>
+```
+
+Si queremos ver la lista de Topics junto con sus particiones ejecutamos el siguiente comando en la misma ruta:
+
+```bash
+sudo docker-compose exec kafka /opt/bitnami/kafka/bin/kafka-topics.sh --bootstrap-server localhost:9092 --describe
+```
+
+
 # Request Servidores
 
 Todos los servidores pueden probarse a traves del enlace ```http://localhost:< port >/```, ejemplo: ```http://localhost:3000/```.
